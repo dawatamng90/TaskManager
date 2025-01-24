@@ -1,0 +1,37 @@
+{% extends 'task/base.html' %}
+{% block title %}Task List{% endblock %}
+{% load static %}
+{% block content %}
+<h1 class="mb-4 text-center">Task List</h1>
+<a href="{% url 'task_create' %}" class="btn btn-success mb-3">Create New Task</a>
+<ul class="list-group mb-5">
+    {% for task in tasks %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <h3>{{ task.task_name }}</h3>
+            <h6>Description:</h6>
+            <p>{{ task.description }}</p>
+            <h5>Status: </h5>
+            <h6><span id="status-{{ task.id }}">{{ task.get_status_display }}</span>
+                {% if task.status == 'pending' %}
+                - Due: {{ task.due_date|date:"F j, Y, g:i A" }}
+                {% else %}
+                - Completed: <span id="completed-date-{{ task.id }}">{{task.completed_date|date:"F j, Y, g:i A"}}</span>
+                {% endif %}
+            </h6>
+        </div>
+        <div class="btn-group">
+            {% if task.status == 'pending' %}
+            <button class="btn btn-success btn-sm" onclick="markAsCompleted({{ task.id }})">Mark as Completed</button>
+            {% endif %}
+            <a href="{% url 'task_edit' task.id %}" class="btn btn-warning btn-sm ml-2">Edit</a>
+            <form method="POST" action="{% url 'task_delete' task.id %}" class="d-inline-block ml-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+<script src="{% static 'js/mark-completed.js' %}"></script>
+{% endblock %}

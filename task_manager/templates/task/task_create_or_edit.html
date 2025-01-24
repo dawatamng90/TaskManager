@@ -1,0 +1,41 @@
+{% extends 'task/base.html' %}
+
+{% block title %}{{ form.instance.id|yesno:"Edit Task,Create Task" }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">{{ form.instance.id|yesno:"Edit Task,Create Task" }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <!-- Task Name Field -->
+        <div class="form-group">
+            <label for="{{ form.task_name.id_for_label }}">Task Name</label>
+            {{ form.task_name }}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Due Date Field -->
+        <div class="form-group">
+            <label for="{{ form.due_date.id_for_label }}">Due Date</label>
+            {{ form.due_date }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mt-3">
+            {% if form.instance.id %}
+            Update Task
+            {% else %}
+            Create Task
+            {% endif %}
+        </button>
+
+        <!-- Cancel Button -->
+        <a href="{% url 'task_list' %}" class="btn btn-secondary mt-3 ml-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}
